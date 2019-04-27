@@ -384,7 +384,7 @@ class AmazonProcessor(DataProcessor):
 
     with open(data_dir+'/workspace.target.list', 'r') as test_f:
       test_list = test_f.readlines()
-    self.test_task_num = len(train_list)*3
+    self.test_task_num = len(test_list)*3
     
     return self.train_task_num, self.test_task_num
 
@@ -977,7 +977,7 @@ def main(_):
       eval_batch_size=FLAGS.eval_batch_size,
       predict_batch_size=FLAGS.predict_batch_size)
 
-  task_ids = np.random.permutation(train_task_number)
+  task_ids = np.arange(train_task_number)
   if FLAGS.do_train:
     
     for id in task_ids:
