@@ -1,6 +1,9 @@
 import os
 import tensorflow as tf
 import csv
+import tokenization
+from run_classifier import InputExample
+
 class DataProcessor(object):
   """Base class for data converters for sequence classification data sets."""
   def get_train_examples(self, data_dir):
