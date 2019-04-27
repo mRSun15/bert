@@ -1,5 +1,5 @@
 class DataProcessor(object):
-      """Base class for data converters for sequence classification data sets."""
+  """Base class for data converters for sequence classification data sets."""
   def get_train_examples(self, data_dir):
     """Gets a collection of `InputExample`s for the train set."""
     raise NotImplementedError()
