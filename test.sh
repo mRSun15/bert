@@ -1,13 +1,13 @@
 BERT_BASE_DIR="uncased_model"
-GLUE_DIR="glue_data"
+DATA_DIR="Amazon_few_shot"
 echo 'Who was Jim Henson ? ||| Jim Henson was a puppeteer' > /tmp/input.txt
 
 
-python run_classifier.py \
-  --task_name=COLA \
+python3 run_classifier.py \
+  --task_name=amazon \
   --do_train=true \
   --do_eval=true \
-  --data_dir=$GLUE_DIR/COLA\
+  --data_dir=$DATA_DIR \
   --vocab_file=$BERT_BASE_DIR/vocab.txt \
   --bert_config_file=$BERT_BASE_DIR/bert_config.json \
   --init_checkpoint=$BERT_BASE_DIR/bert_model.ckpt \
