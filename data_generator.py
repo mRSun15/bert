@@ -227,7 +227,7 @@ class ColaProcessor(DataProcessor):
 
 class AmazonProcessor(DataProcessor):
   """Processor for the Amazon data set ."""
-  def calculate_task_num(data_dir):
+  def calculate_task_num(self,data_dir):
     with open(data_dir+'/workspace.filtered.list', 'r') as train_f:
       train_list = train_f.readlines()
     self.train_task_num = len(train_list)*3
@@ -238,16 +238,16 @@ class AmazonProcessor(DataProcessor):
     
     return self.train_task_num, self.test_task_num
 
-  def _read_file(dataname):
+  def _read_file(self,dataname):
     
-    with tf.gfile.Open(input_file, "r") as f:
+    with tf.gfile.Open(dataname, "r") as f:
       reader = csv.reader(f, delimiter="\t")
       lines = []
       for line in reader:
         lines.append(line)
     return lines
 
-  def _divide_tasks(data_name, type):
+  def _divide_tasks(self,data_name, type):
     task_class = ['t2', 't5', 't4']
     tasks = []
     for task in task_class:

@@ -621,7 +621,7 @@ def main(_):
 
   label_list = processor.get_labels()
   print("read data!")
-  processor.load_all_data()
+  processor.load_all_data(FLAGS.data_dir)
   print("load finished!")
 
   tokenizer = tokenization.FullTokenizer(
