@@ -250,31 +250,36 @@ class AmazonProcessor(DataProcessor):
   def _divide_tasks(self,data_name, type):
     task_class = ['t2', 't5', 't4']
     tasks = []
+    total_len = 0
     for task in task_class:
       file_name = data_name+'.'+task+'.'+type
       print(file_name)
-      tasks.append(self._read_file(file_name))
+      task_data = self._read_file(file_name)
+      tasks.append(task_data)
+      total_len = total_len+len(task_data)
     
-    return tasks
+    return tasks, total_len
 
   def _get_examples(self, data_dir, filter_name, type):
   
     tasks = []
+    total_len = 0
     with open(os.path.join(data_dir, filter_name), 'r') as f:
       task_list = f.readlines()
       task_list = [name.strip() for name in task_list]
     for task_name in task_list:
-      tasks.extend(self._divide_tasks(os.path.join(data_dir, task_name), type))
-    
-    return tasks
+      diverse_task, task_len = self._divide_tasks(os.path.join(data_dir, task_name), type)
+      tasks.extend(diverse_task)
+      total_len += task_len
+    return tasks, total_len
 
   def load_all_data(self, data_dir):
-    self.train_tasks = self._get_examples(data_dir, 'workspace.filtered.list', 'train')
-    self.dev_tasks = self._get_examples(data_dir, 'workspace.filtered.list', 'dev')
-    self.test_tasks = self._get_examples(data_dir, 'workspace.filtered.list', 'test')
-    self.fsl_train = self._get_examples(data_dir, 'workspace.target.list', 'train')
-    self.fsl_dev = self._get_examples(data_dir, 'workspace.target.list', 'dev')
-    self.fsl_test = self._get_examples(data_dir, 'workspace.target.list', 'test')
+    self.train_tasks,self.train_number = self._get_examples(data_dir, 'workspace.filtered.list', 'train')
+    self.dev_tasks,self.dev_number = self._get_examples(data_dir, 'workspace.filtered.list', 'dev')
+    self.test_tasks,self.test_number = self._get_examples(data_dir, 'workspace.filtered.list', 'test')
+    self.fsl_train,self.fsl_train_number = self._get_examples(data_dir, 'workspace.target.list', 'train')
+    self.fsl_dev,self.fsl_dev_number = self._get_examples(data_dir, 'workspace.target.list', 'dev')
+    self.fsl_test,self.fsl_test_number = self._get_examples(data_dir, 'workspace.target.list', 'test')
       
 
   def get_train_examples(self, data_dir, task_id=0):

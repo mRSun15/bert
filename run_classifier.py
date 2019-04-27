@@ -617,10 +617,11 @@ def main(_):
     raise ValueError("Task not found: %s" % (task_name))
 
   processor = processors[task_name]()
-  train_task_number, test_task_number = processor.calculate_task_num()
+
 
   label_list = processor.get_labels()
   print("read data!")
+  train_task_number, test_task_number = processor.calculate_task_num(FLAGS.data_dir)
   processor.load_all_data(FLAGS.data_dir)
   print("load finished!")
 
