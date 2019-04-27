@@ -373,34 +373,6 @@ class ColaProcessor(DataProcessor):
       examples.append(
           InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
     return examples
-
-# class AmazonProcessor():
-#   def __init__(self, num_sample_per_class, batch_size):
-#     self.batch_size = batch_size
-#     self.num_sample_per_class = num_sample_per_class
-#     self.num_classes = 2
-  
-#    def _divide_tasks(data_name, task_list, name='train'):
-#     task_class = ['t2', 't5', 't4']
-#     for task in task_class:
-#         file_name = data_name+'.'+task
-#         # print(file_name)
-#         task_sent, task_labels = self._load_single_data(file_name+'.'+name)
-#         task_list.append({'sentence': task_sent, 'label': task_labels})
-
-#   def _load_single_data(data_name):
-#     with open(data_name, 'r') as f:
-#       data_lines = f.readlines()
-    
-#     new_lines = [line.strip().split('\t') for line in data_lines]
-#     labels = [line[1] if int(line[1]) == 1 else '0' for line in new_lines]
-#     sentences = [line[0] for line in data_lines]
-
-#     return sentences, labels
-  
-#   def get_train_examples(self, data_dir):
-    
-        
     
 
 class AmazonProcessor(DataProcessor):
@@ -452,6 +424,9 @@ class AmazonProcessor(DataProcessor):
     return tasks, total_len
 
   def load_all_data(self, data_dir):
+    self.max_train_number = 0
+    self.max_dev_number = 0
+    self.max_test_number = 0
     self.train_tasks,self.train_number = self._get_examples(data_dir, 'workspace.filtered.list', 'train')
     self.dev_tasks,self.dev_number = self._get_examples(data_dir, 'workspace.filtered.list', 'dev')
     self.test_tasks,self.test_number = self._get_examples(data_dir, 'workspace.filtered.list', 'test')
@@ -1007,19 +982,21 @@ def main(_):
     
     for id in task_ids:
       train_examples = processor.get_train_examples(FLAGS.data_dir,id)
+      new_num_train_steps = int(
+        len(train_examples) / FLAGS.train_batch_size * FLAGS.num_train_epochs)
       train_file = os.path.join(FLAGS.output_dir, "train.tf_record"+str(id))
       file_based_convert_examples_to_features(
           train_examples, label_list, FLAGS.max_seq_length, tokenizer, train_file)
       tf.logging.info("***** Running training *****")
       tf.logging.info("  Num examples = %d", len(train_examples))
       tf.logging.info("  Batch size = %d", FLAGS.train_batch_size)
-      tf.logging.info("  Num steps = %d", num_train_steps)
+      tf.logging.info("  Num steps = %d", new_num_train_steps)
       train_input_fn = file_based_input_fn_builder(
           input_file=train_file,
           seq_length=FLAGS.max_seq_length,
           is_training=True,
           drop_remainder=True)
-      estimator.train(input_fn=train_input_fn, max_steps=num_train_steps)
+      estimator.train(input_fn=train_input_fn, max_steps=new_num_train_steps)
 
   if FLAGS.do_eval:
     for id in task_ids:
