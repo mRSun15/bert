@@ -473,8 +473,11 @@ class AmazonProcessor(DataProcessor):
         text_a = tokenization.convert_to_unicode(line[0])
         label = "-1"
       else:
-        text_a = tokenization.convert_to_unicode(line[0])
-        label = tokenization.convert_to_unicode(line[1])
+        try:
+          text_a = tokenization.convert_to_unicode(line[0])
+          label = tokenization.convert_to_unicode(line[1])
+        except:
+          print(line)
       examples.append(
           InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
     return examples
