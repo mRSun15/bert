@@ -238,7 +238,7 @@ class AmazonProcessor(DataProcessor):
     
     return self.train_task_num, self.test_task_num
 
-  def _read_file(dataname, ''):
+  def _read_file(dataname):
     
     with tf.gfile.Open(input_file, "r") as f:
       reader = csv.reader(f, delimiter="\t")
