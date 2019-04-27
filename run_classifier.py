@@ -654,7 +654,7 @@ def main(_):
     #     len(train_examples) / FLAGS.train_batch_size * FLAGS.num_train_epochs)
     num_train_steps = int(processor.train_number/FLAGS.train_batch_size * FLAGS.num_train_epochs)
     num_warmup_steps = int(num_train_steps * FLAGS.warmup_proportion)
-  print("total train number: ". processor.train_number)
+  print("total train number: ",processor.train_number)
   model_fn = model_fn_builder(
       bert_config=bert_config,
       num_labels=len(label_list),
