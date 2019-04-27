@@ -1,6 +1,5 @@
 class DataProcessor(object):
       """Base class for data converters for sequence classification data sets."""
-
   def get_train_examples(self, data_dir):
     """Gets a collection of `InputExample`s for the train set."""
     raise NotImplementedError()
@@ -228,7 +227,6 @@ class ColaProcessor(DataProcessor):
 
 class AmazonProcessor(DataProcessor):
   """Processor for the Amazon data set ."""
-
   def calculate_task_num(data_dir):
     with open(data_dir+'/workspace.filtered.list', 'r') as train_f:
       train_list = train_f.readlines()
@@ -247,7 +245,7 @@ class AmazonProcessor(DataProcessor):
       lines = []
       for line in reader:
         lines.append(line)
-      return lines
+    return lines
 
   def _divide_tasks(data_name, type):
     task_class = ['t2', 't5', 't4']
@@ -260,30 +258,31 @@ class AmazonProcessor(DataProcessor):
     return tasks
 
   def _get_examples(self, data_dir, filter_name, type):
-      tasks = []
-      with open(os.path.join(data_dir, filter_name), 'r') as f:
-        task_list = f.readlines()
-        task_list = [name.strip() for name in task_list]
-      for task_name in task_list:
-        tasks.extend(self._divide_tasks(os.path.join(data_dir, task_name), type))
-      
-      return tasks
+  
+    tasks = []
+    with open(os.path.join(data_dir, filter_name), 'r') as f:
+      task_list = f.readlines()
+      task_list = [name.strip() for name in task_list]
+    for task_name in task_list:
+      tasks.extend(self._divide_tasks(os.path.join(data_dir, task_name), type))
+    
+    return tasks
 
   def load_all_data(self, data_dir):
-      self.train_tasks = self._get_examples(data_dir, 'workspace.filtered.list', 'train')
-      self.dev_tasks = self._get_examples(data_dir, 'workspace.filtered.list', 'dev')
-      self.test_tasks = self._get_examples(data_dir, 'workspace.filtered.list', 'test')
-      self.fsl_train = self._get_examples(data_dir, 'workspace.target.list', 'train')
-      self.fsl_dev = self._get_examples(data_dir, 'workspace.target.list', 'dev')
-      self.fsl_test = self._get_examples(data_dir, 'workspace.target.list', 'test')
+    self.train_tasks = self._get_examples(data_dir, 'workspace.filtered.list', 'train')
+    self.dev_tasks = self._get_examples(data_dir, 'workspace.filtered.list', 'dev')
+    self.test_tasks = self._get_examples(data_dir, 'workspace.filtered.list', 'test')
+    self.fsl_train = self._get_examples(data_dir, 'workspace.target.list', 'train')
+    self.fsl_dev = self._get_examples(data_dir, 'workspace.target.list', 'dev')
+    self.fsl_test = self._get_examples(data_dir, 'workspace.target.list', 'test')
       
 
   def get_train_examples(self, data_dir, task_id=0):
-      return self._create_examples(self.train_tasks[task_id],"train",task_id) 
+    return self._create_examples(self.train_tasks[task_id],"train",task_id) 
 
   def get_dev_examples(self, data_dir,task_id=0):
     """See base class."""
-      return self._create_examples(self.dev_tasks[task_id],"dev",task_id) 
+    return self._create_examples(self.dev_tasks[task_id],"dev",task_id) 
 
   def get_test_examples(self, data_dir,task_id=0):
     """See base class."""
@@ -291,11 +290,11 @@ class AmazonProcessor(DataProcessor):
 
   def get_fsl_train_examples(self, data_dir, task_id=0):
     
-      return self._create_examples(self.fsl_train[task_id],"train",task_id) 
+    return self._create_examples(self.fsl_train[task_id],"train",task_id) 
 
   def get_fsl_dev_examples(self, data_dir,task_id=0):
     """See base class."""
-      return self._create_examples(self.fsl_dev[task_id],"dev",task_id) 
+    return self._create_examples(self.fsl_dev[task_id],"dev",task_id) 
 
   def get_fsl_test_examples(self, data_dir,task_id=0):
     """See base class."""
