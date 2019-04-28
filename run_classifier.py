@@ -77,7 +77,7 @@ flags.DEFINE_bool(
     "do_predict", False,
     "Whether to run the model in inference mode on the test set.")
 
-flags.DEFINE_integer("train_batch_size", 32, "Total batch size for training.")
+flags.DEFINE_integer("train_batch_size", 5, "Total batch size for training.")
 
 flags.DEFINE_integer("eval_batch_size", 8, "Total batch size for eval.")
 
@@ -1048,7 +1048,7 @@ def main(_):
           tf.logging.info("  %s = %s", key, str(result[key]))
           writer.write("%s = %s\n" % (key, str(result[key])))
       total_acc += result['eval_accuracy']
-    tf.logging.info("Evaluation Acc: ", total_acc)
+    tf.logging.info("Evaluation Acc: %s", total_acc)
 
       
   print("=================Few shot Learning=============")
@@ -1058,12 +1058,12 @@ def main(_):
   if FLAGS.do_eval:
     for id in fsl_task_ids:
       train_examples = processor.get_fsl_train_examples(FLAGS.data_dir, id)
-      new_num_train_steps = 4
+      new_num_train_steps = 2
       train_file = os.path.join(FLAGS.output_dir, "fsl_train.tf_record"+str(id))
       file_based_convert_examples_to_features(train_examples, label_list, FLAGS.max_seq_length, tokenizer,train_file)
       tf.logging.info("***** Running FSL training *****")
       tf.logging.info("  Num examples = %d", len(train_examples))
-      tf.logging.info("  Batch size = %d", 5)
+      tf.logging.info("  Batch size = %d", FLAGS.batch_size)
       tf.logging.info("  Num steps = %d", new_num_train_steps)
       train_input_fn = file_based_input_fn_builder(
           input_file = train_file,
