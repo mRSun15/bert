@@ -1048,7 +1048,7 @@ def main(_):
           tf.logging.info("  %s = %s", key, str(result[key]))
           writer.write("%s = %s\n" % (key, str(result[key])))
       total_acc += result['eval_accuracy']
-    tf.logging.info("Evaluation Acc: %s", total_acc)
+    tf.logging.info("Evaluation Acc: %s", total_acc/train_task_number)
 
       
   print("=================Few shot Learning=============")
@@ -1063,7 +1063,7 @@ def main(_):
       file_based_convert_examples_to_features(train_examples, label_list, FLAGS.max_seq_length, tokenizer,train_file)
       tf.logging.info("***** Running FSL training *****")
       tf.logging.info("  Num examples = %d", len(train_examples))
-      tf.logging.info("  Batch size = %d", FLAGS.batch_size)
+      tf.logging.info("  Batch size = %d", FLAGS.train_batch_size)
       tf.logging.info("  Num steps = %d", new_num_train_steps)
       train_input_fn = file_based_input_fn_builder(
           input_file = train_file,
